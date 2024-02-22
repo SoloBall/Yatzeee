@@ -30,7 +30,7 @@ namespace Yatzeee
             }
             int currentPlayer = 0;
             string answer = "";
-            for (int i = 0; i < Math.Abs(int.Parse(filter)); i++)
+            for (int i = 0; i < Math.Abs(int.Parse(filter)); i++) 
             {
                 Console.WriteLine($"Enter name of player {(i + 1).ToString()}: ");
                 players.Add(new Player(Console.ReadLine()));
