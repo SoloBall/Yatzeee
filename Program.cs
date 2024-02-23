@@ -61,7 +61,7 @@ namespace Yatzeee
                             }
                         }
                     }
-                    List<string> choices = CheckChoices(dice, players[currentPlayer])[0];
+                    List<string> choices = CheckChoices(dice, players[currentPlayer]);
 
                     Console.WriteLine("Your available Combinations are: ");
                     for (int i = 0; i < choices.Count(); i++)
@@ -90,7 +90,7 @@ namespace Yatzeee
                         answer = Console.ReadLine();
                     }
                     string pairs = "";
-                    List<string> dices = CheckChoices(dice, players[currentPlayer])[1];
+                    List<int> dices = CountDice(dice);
 
                     if (int.Parse(answer) - 1 == choices.Count())
                     {
@@ -120,33 +120,33 @@ namespace Yatzeee
                     }
                     else if (choices[int.Parse(answer)-1] == "ones")
                     {
-                        players[currentPlayer].Combinations["ones"] = int.Parse(dices[0]);
+                        players[currentPlayer].Combinations["ones"] = dices[0];
                     }
                     else if (choices[int.Parse(answer)-1] == "twos")
                     {
-                        players[currentPlayer].Combinations["twos"] = int.Parse(dices[1])*2;
+                        players[currentPlayer].Combinations["twos"] = dices[1] *2;
                     }
                     else if (choices[int.Parse(answer) - 1] == "threes")
                     {
-                        players[currentPlayer].Combinations["threes"] = int.Parse(dices[2])*3;
+                        players[currentPlayer].Combinations["threes"] = dices[2] *3;
                     }
                     else if (choices[int.Parse(answer) - 1] == "fours")
                     {
-                        players[currentPlayer].Combinations["fours"] = int.Parse(dices[3])*4;
+                        players[currentPlayer].Combinations["fours"] = dices[3] *4;
                     }
                     else if (choices[int.Parse(answer) - 1] == "fives")
                     {
-                        players[currentPlayer].Combinations["fives"] = int.Parse(dices[4])*5;
+                        players[currentPlayer].Combinations["fives"] = dices[4] *5;
                     }
                     else if (choices[int.Parse(answer) - 1] == "sixes")
                     {
-                        players[currentPlayer].Combinations["sixes"] = int.Parse(dices[5])*6;
+                        players[currentPlayer].Combinations["sixes"] = dices[5] *6;
                     }
                     else if (choices[int.Parse(answer) - 1] == "onePair")
                     {
                         for (int i = 0; i < dices.Count(); i++)
                         {
-                            if (int.Parse(dices[i]) > 1)
+                            if (dices[i] > 1)
                             {
                                 pairs += (i+1).ToString();
                             } 
@@ -173,7 +173,7 @@ namespace Yatzeee
                     {
                         for (int i = 0; i < dices.Count(); i++)
                         {
-                            if (int.Parse(dices[i]) > 1)
+                            if (dices[i] > 1)
                             {
                                 pairs += (i + 1).ToString();
                             }
@@ -184,7 +184,7 @@ namespace Yatzeee
                     {
                         for (int i = 0; i < dices.Count(); i++)
                         {
-                            if (dices[i] == "3")
+                            if (dices[i] == 3)
                             {
                                 players[currentPlayer].Combinations["threeAlike"] = (i+1) * 3;
                                 break;
@@ -195,7 +195,7 @@ namespace Yatzeee
                     {
                         for (int i = 0; i < dices.Count(); i++)
                         {
-                            if (dices[i] == "4")
+                            if (dices[i] == 4)
                             {
                                 players[currentPlayer].Combinations["fourAlike"] = (i + 1) * 4;
                                 break;
@@ -215,11 +215,11 @@ namespace Yatzeee
                         players[currentPlayer].Combinations["house"] = 0;
                         for (int i = 0; i < dices.Count(); i++)
                         {
-                            if (dices[i] == "3")
+                            if (dices[i] == 3)
                             {
                                 players[currentPlayer].Combinations["house"] += (i + 1) * 3;
                             }
-                            else if (dices[i] == "2")
+                            else if (dices[i] == 2)
                             {
                                 players[currentPlayer].Combinations["house"] += (i + 1) * 2;
                             }
@@ -237,7 +237,7 @@ namespace Yatzeee
                     {
                         for (int i = 0; i < dices.Count(); i++)
                         {
-                            if (dices[i] == "5")
+                            if (dices[i] == 5)
                             {
                                 players[currentPlayer].Combinations["yatzy"] = 50;
                                 break;
@@ -268,54 +268,23 @@ namespace Yatzeee
         static void ShowRoll(List<int> dice, Player player)
         {
             Console.WriteLine($"{player.Name} rolled:");
+            dice.Sort();
             foreach (int n in dice)
             {
                 Console.Write($"{n}, ");
             }
         }
 
-        static List<List<string>> CheckChoices(List<int> dice, Player player)
+        static List<string> CheckChoices(List<int> dice, Player player)
         {
             List<string> list = new List<string>();
-            List<int> dices = new List<int>();
+            List<int> dices = CountDice(dice);
             int count = 0;
             int pairs = 0;
             bool threeAlike = false;
             bool fourAlike = false;
             bool yatzy = false;
             int straight = 0;
-            for (int i = 0; i < 6; i++)
-            {
-                dices.Add(0);
-            }
-
-            foreach (int n in dice)
-            {
-                if (n == 1)
-                {
-                    dices[0]++;
-                }
-                if (n == 2)
-                {
-                    dices[1]++;
-                }
-                if (n == 3)
-                {
-                    dices[2]++;
-                }
-                if (n == 4)
-                {
-                    dices[3]++;
-                }
-                if (n == 5)
-                {
-                    dices[4]++;
-                }
-                if (n == 6)
-                {
-                    dices[5]++;
-                }
-            }
 
             foreach (int n in dices)
             {
@@ -471,14 +440,8 @@ namespace Yatzeee
             {
                 list.Add("yatzy");
             }
-            List<List<string>> newList = new List<List<string>>();
-            newList.Add(list);
-            newList.Add(new List<string>());
-            foreach (int n in dices)
-            {
-                newList[1].Add(n.ToString());
-            }
-            return newList;
+            
+            return list;
         }
 
         static List<string> CheckUnused(Player player)
@@ -596,6 +559,43 @@ namespace Yatzeee
             }
             ShowRoll(dice, players[currentPlayer]);
             return dice;
+        }
+
+        static List<int> CountDice(List<int> dice)
+        {
+            List<int> dices = new List<int>();
+            for (int i = 0; i < 6; i++)
+            {
+                dices.Add(0);
+            }
+            foreach (int n in dice)
+            {
+                if (n == 1)
+                {
+                    dices[0]++;
+                }
+                if (n == 2)
+                {
+                    dices[1]++;
+                }
+                if (n == 3)
+                {
+                    dices[2]++;
+                }
+                if (n == 4)
+                {
+                    dices[3]++;
+                }
+                if (n == 5)
+                {
+                    dices[4]++;
+                }
+                if (n == 6)
+                {
+                    dices[5]++;
+                }
+            }
+            return dices;
         }
     }
 }
